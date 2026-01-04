@@ -1,5 +1,5 @@
 from fastapi import FastAPI, Body, Path, Query, HTTPException, Depends, Request
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi.security import HTTPBearer
 from fastapi.middleware.cors import CORSMiddleware
@@ -62,7 +62,7 @@ class Portador(HTTPBearer):
 #crear endpoint usando un decorador
 @app.get('/', tags=['Inicio'])
 def root():
-    return HTMLResponse('<h1>Titulo HTML desde FastAPI</h1>')
+    return FileResponse('frontend/index.html')
 
 @app.get('/ventas', tags=['Ventas'], response_model=List[Ventas], status_code=200, dependencies=[Depends(Portador())])
 def dame_ventas() -> List[Ventas]:

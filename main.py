@@ -2,6 +2,7 @@ from fastapi import FastAPI, Body, Path, Query, HTTPException, Depends, Request
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi.security import HTTPBearer
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional, List
 from jwt_config import *
@@ -14,6 +15,14 @@ app.title = 'Aplicacion de Ventas'
 app.version = '1.0.1'
 base.metadata.create_all(bind=motor)
 
+#Creando el permiso
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 #Modelo usuario
 class Usuario(BaseModel):

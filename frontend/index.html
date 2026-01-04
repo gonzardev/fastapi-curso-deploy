@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App de Ventas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <style>
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }        
+
+        body {
+            background: url('https://images.pexels.com/photos/2078266/pexels-photo-2078266.jpeg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-attachment: fixed;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #seccion-login {
+            width: 100%;
+            justify-content: center;
+            max-width: 400px;
+            min-height: 400px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 50px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+    
+    </style>
+</head>
+<body class="bg-light">
+
+        <div id="seccion-login" class="card shadow">
+            <h2 class="text-center mb-4">Login</h2>
+
+            <div class="mb-3">
+                <label for="user-email" class="form-label">Ingresa tu email</label>
+                <input type="email" id="user-email" class="form-control" placeholder="ejemplo@correo.com">
+            </div>
+
+            <div class="mb-3">
+                <label for="user-clave" class="form-label">Ingresa tu clave</label>
+                <input type="password" id="user-clave" class="form-control">
+            </div>
+
+            <button class="btn btn-primary w-100 mt-3" onclick="enviarDatos()">Entrar</button>
+        </div>
+
+</body>
+
+<script>
+    const URL_BASE = "https://fastapi-6azo.onrender.com"
+
+    async function enviarDatos() {
+        const email = document.getElementById('user-email').value;
+        const clave = document.getElementById('user-clave').value;
+
+        if (!email || !clave) {
+            alert('Completa todos los campos!')
+            return
+        }
+    
+        console.log("Enviando datos a la API...")
+
+        try {
+            const respuesta = await fetch(`${URL_BASE}/login`, {
+                method: 'POST', // Tu endpoint es un POST
+                headers: {
+                    'Content-Type': 'application/json' // Le avisamos que mandamos JSON
+                },
+                body: JSON.stringify({
+                    email: email, // La clave del JSON debe ser igual a la que espera tu Pydantic
+                    clave: clave
+                })
+            });
+
+            // Convertimos la respuesta a un objeto JS
+            const datos = await respuesta.json();
+
+            if (respuesta.ok) {
+                // ¡ÉXITO! Tu API devolvió un 200
+                console.log("Login exitoso. Token recibido:", datos.token);
+                alert("Bienvenido! Token guardado en consola.");
+                
+                // Aquí guardaremos el token para futuras peticiones
+                localStorage.setItem('mi_token_jwt', datos.token);
+            } else {
+                // El servidor respondió con error (401, 404, etc)
+                alert("Error: " + (datos.detail || "Credenciales incorrectas"));
+            }
+
+        } catch (error) {
+            // Error de red (el servidor está caído o no hay internet)
+            console.error("Error de conexión:", error);
+            alert("No se pudo conectar con el servidor.");
+        }
+    } // Fin de la función
+</script>
+
+</html>

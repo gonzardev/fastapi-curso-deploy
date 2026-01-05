@@ -2,16 +2,24 @@
 
 Este es un proyecto profesional desarrollado con **FastAPI** y **Bootstrap 5**. Permite gestionar ventas en tiempo real con autenticación de usuarios.
 
+## 🔗 Enlace al Proyecto:
+- https://fastapi-6azo.onrender.com/
+
+## 🔒 Acceso DEMO - Para prbar las funcionalidades utiliza las siguientes credenciales
+- **Email:** test@ejemplo.com
+- **Clave:** 1234
+
 ## ✨ Características
-- **Autenticación:** Login seguro con JWT (JSON Web Tokens).
+- **Autenticación:** Login seguro gestionado con JWT (JSON Web Tokens).
 - **CRUD Completo:** Registro, visualización y eliminación de ventas.
 - **Backend:** API REST construida con Python y SQLAlchemy.
-- **Frontend:** Dashboard dinámico y responsive.
+- **Base de Datos:** PostgreSQL (alojada en Render). 
+- **Frontend:** Dashboard dinámico, responsive y optimizado.
 
 ## 🛠️ Tecnologías
-- **Backend:** Python, FastAPI, SQLite.
+- **Backend:** Python, FastAPI, SQLite/PostgreSQL.
 - **Frontend:** HTML, CSS, JavaScript, Bootstrap 5.
-- **Despliegue:** Render.
+- **Despliegue:** Render (Web Service + PostgreSQL)
 
 ## 📸 Captura
 ![Login](Login.PNG)

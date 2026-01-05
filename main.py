@@ -3,6 +3,7 @@ from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.encoders import jsonable_encoder
 from fastapi.security import HTTPBearer
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field, ConfigDict
 from typing import Optional, List
 from jwt_config import *
@@ -14,6 +15,9 @@ app = FastAPI()
 app.title = 'Aplicacion de Ventas'
 app.version = '1.0.1'
 base.metadata.create_all(bind=motor)
+
+#Puente para CSS
+app.mount("/static", StaticFiles(directory="frontend"), name="static")
 
 #Creando el permiso
 app.add_middleware(
@@ -34,7 +38,7 @@ class Usuario(BaseModel):
 class Ventas(BaseModel):
     id: Optional[int] = None
     fecha: str = Field(..., examples=["22/12/26"])
-    tienda: str = Field(..., min_length=4, max_length=10, examples=["Tienda01"])
+    tienda: str = Field(..., min_length=4, max_length=100, examples=["Tienda01"])
     importe: float = Field(..., examples=[999.99])
     #Usando modelconfig
     model_config = ConfigDict(
@@ -63,6 +67,10 @@ class Portador(HTTPBearer):
 @app.get('/', tags=['Inicio'])
 def root():
     return FileResponse('frontend/index.html')
+
+@app.get('/dashboard', tags=['Inicio'])
+def dashboard():
+    return FileResponse('frontend/dashboard.html')
 
 @app.get('/ventas', tags=['Ventas'], response_model=List[Ventas], status_code=200, dependencies=[Depends(Portador())])
 def dame_ventas() -> List[Ventas]:

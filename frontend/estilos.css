@@ -1,0 +1,40 @@
+/* --- ESTILOS GENERALES (Para todas las páginas) --- */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+/* --- ESTILOS EXCLUSIVOS DEL INDEX (LOGIN) --- */
+.body-login {
+    background: url('https://images.pexels.com/photos/2078266/pexels-photo-2078266.jpeg') no-repeat center center fixed;
+    background-size: cover;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#seccion-login {
+    width: 100%;
+    max-width: 400px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    padding: 50px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+/* --- ESTILOS EXCLUSIVOS DEL DASHBOARD --- */
+.body-dashboard {
+    background-color: #f4f7f6; /* Un gris muy suave para que descansen los ojos */
+}
+
+.card-ventas {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.05);
+}
+
+.table-hover tbody tr:hover {
+    background-color: #f1f1f1;
+}

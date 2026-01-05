@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - Ventas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="/static/estilos.css">
+</head>
+
+<body class="body-dashboard">
+    
+    <nav class="navbar navbar-dark bg-dark shadow-sm mb-4">
+        <div class="container">
+            <span class="navbar-brand">🚀 Mi Sistema de Ventas</span>
+
+            <button class="btn btn-outline-danger btn-sm" onclick="cerrarSesion()">
+                Cerrar Sesión
+            </button>
+        </div>
+
+    </nav>
+
+    <div class="container">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h4 mb-0">Gestión de Ventas</h2>
+            <button class="btn btn-success shadow-sm" data-bs-toggle="modal" data-bs-target="#modalVenta">
+                + Registrar Nueva Venta
+            </button>
+        </div>
+
+        <div class="card card-ventas shadow">
+            <div class="card-body p-0"> <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Tienda</th>
+                        <th>Fecha</th>
+                        <th>Importe</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla-ventas-body">
+                    <tr>
+                        <td colspan="4" class="text-center">Cargando ventas...</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </div>
+        
+
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalVenta" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registrar Nueva Venta</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formVenta">
+                        <div class="mb-3">
+                            <label class="form-label">Tienda</label>
+                            <input type="text" id="tienda" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Fecha</label>
+                            <input type="date" id="fecha" class="form-control" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Importe ($)</label>
+                            <input type="number" id="importe" class="form-control" step="0.01" required>
+                        </div>
+                        <div class="modal-footer px-0 pb-0">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="submit" class="btn btn-primary">Guardar Venta</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const URL_BASE = "https://fastapi-6azo.onrender.com";
+        const token = localStorage.getItem('mi_token_jwt');
+
+        if (!token) {
+            window.location.href = "/";
+        }
+
+        // Función para cerrar sesión (Ahora sí la va a encontrar)
+        function cerrarSesion() {
+            localStorage.removeItem('mi_token_jwt');
+            window.location.href = "/";
+        }
+
+        // Función para dibujar la tabla
+        function dibujarTabla(listaDeVentas) {
+            const tablaBody = document.getElementById('tabla-ventas-body');
+            tablaBody.innerHTML = '';
+            
+            if (listaDeVentas.length === 0) {
+                tablaBody.innerHTML = '<tr><td colspan="5" class="text-center">No hay ventas. ¡Cargá la primera!</td></tr>';
+                return;
+            }
+
+            listaDeVentas.forEach(v => {
+                tablaBody.innerHTML += `
+                    <tr>
+                        <td>#${v.id}</td>
+                        <td>${v.tienda}</td>
+                        <td>${v.fecha}</td>
+                        <td class="text-success fw-bold">$${v.importe}</td>
+                        <td>
+                            <button class="btn btn-sm btn-outline-danger" onclick="eliminarVenta(${v.id})">Eliminar</button>
+                            </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Función para pedir las ventas al servidor
+        async function cargarVentas() {
+            try {
+                const respuesta = await fetch(`${URL_BASE}/ventas`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                if (respuesta.ok) {
+                    const ventas = await respuesta.json();
+                    dibujarTabla(ventas);
+                }
+            } catch (error) {
+                console.error("Error cargando ventas:", error);
+            }
+        }
+
+        async function eliminarVenta(id) {
+            if (!confirm("Estas seguro que quieres eliminar esta venta?")) {
+                return;
+            }
+
+            try {
+                const respuesta = await fetch (`${URL_BASE}/ventas/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+
+                if (respuesta.ok) {
+                    alert("Venta eliminada correctamente");
+                    cargarVentas();
+                } else {
+                    alert("No se ha podido eliminar la venta. Error: " + respuesta.status);
+                }
+            } catch (error) {
+                console.error("Error al intentar eliminar:", error)
+            }
+        }
+
+        // Escuchar el formulario de nueva venta
+        document.getElementById('formVenta').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const nuevaVenta = {
+                tienda: document.getElementById('tienda').value,
+                fecha: document.getElementById('fecha').value,
+                importe: parseFloat(document.getElementById('importe').value)
+            };
+
+            const respuesta = await fetch(`${URL_BASE}/ventas`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(nuevaVenta)
+            });
+
+            if (respuesta.ok) {
+                alert("Venta guardada");
+                location.reload();
+            }
+        });
+
+        // Al cargar la página, pedimos las ventas
+        cargarVentas();
+    </script>
+</body>
+
+</html>

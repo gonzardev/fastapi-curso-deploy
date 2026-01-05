@@ -21,7 +21,7 @@ Este es un proyecto profesional desarrollado con **FastAPI** y **Bootstrap 5**. 
 - **Frontend:** HTML, CSS, JavaScript, Bootstrap 5.
 - **Despliegue:** Render (Web Service + PostgreSQL)
 
-## 📸 Captura
+## 📸 Capturas
 ![Login](Login.PNG)
 ![Dashboard](Dashboard.PNG)
 ![Nueva Venta](Nueva-venta.PNG)

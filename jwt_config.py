@@ -1,5 +1,5 @@
 from jwt import encode, decode
-
+from jose import jwt
 def dame_token(dato:dict) -> str:
     token: str = encode(payload=dato, key='mi_clave', algorithm='HS256')
     return token

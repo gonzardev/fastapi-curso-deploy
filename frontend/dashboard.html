@@ -30,6 +30,27 @@
             </button>
         </div>
 
+
+    <div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card bg-primary text-white shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">Total Recaudado</h6>
+                <h2 id="total-dinero">$ 0.00</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card bg-success text-white shadow-sm">
+            <div class="card-body">
+                <h6 class="card-title">Cantidad de Ventas</h6>
+                <h2 id="total-ventas">0</h2>
+            </div>
+        </div>
+    </div>
+</div>    
+
+
         <div class="card card-ventas shadow">
             <div class="card-body p-0"> <table class="table table-hover mb-0">
                 <thead class="table-light">
@@ -103,6 +124,9 @@
 
         // Función para dibujar la tabla
         function dibujarTabla(listaDeVentas) {
+            const totalDinero = listaDeVentas.reduce((sum, v) => sum + v.importe, 0);
+            document.getElementById('total-dinero').innerText = `$ ${totalDinero.toFixed(2)}`;
+            document.getElementById('total-ventas').innerText = listaDeVentas.length;
             const tablaBody = document.getElementById('tabla-ventas-body');
             tablaBody.innerHTML = '';
             

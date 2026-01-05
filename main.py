@@ -87,7 +87,7 @@ def dame_ventas_por_id(id: int = Path(ge=1, le=1000)) -> List[Ventas]:
     return JSONResponse(status_code = 200, content=jsonable_encoder(resultado))
 
 @app.get('/ventas/', tags=['Ventas'], response_model=List[Ventas])
-def dame_ventas_por_tienda(tienda: str = Query(min_length=4, max_length=20)) -> List[Ventas]:
+def dame_ventas_por_tienda(tienda: str = Query(min_length=4, max_length=100)) -> List[Ventas]:
     db = sesion()
     resultado = db.query(VentasModelo).filter(VentasModelo.tienda == tienda).all()
     if not resultado:

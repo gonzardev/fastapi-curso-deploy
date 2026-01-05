@@ -127,7 +127,7 @@ def borrar_venta(id: int) -> dict:
 #Creando ruta para login
 @app.post('/login', tags=['Autenticacion'])
 def login(usuario:Usuario):
-    if usuario.email == 'gonzaneke@gmail.com' and usuario.clave == '1234':
+    if usuario.email == 'test@ejemplo.com' and usuario.clave == '1234':
         token:str = dame_token({"email": usuario.email})
         return JSONResponse(status_code=200 , content={'token': token})
     return JSONResponse(status_code=401, content={"message": "Usuario o clave incorrectos"})

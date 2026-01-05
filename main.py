@@ -58,7 +58,7 @@ class Portador(HTTPBearer):
     async def __call__(self, request:Request):
         autorizacion = await super().__call__(request)
         dato = valida_token(autorizacion.credentials)
-        if dato['email'] != 'gonzaneke@gmail.com':
+        if dato['email'] != 'test@ejemplo.com':
             raise HTTPException(status_code=403, detail='No autorizado')
         
 

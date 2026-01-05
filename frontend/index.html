@@ -56,9 +56,10 @@
 
             // Convertimos la respuesta a un objeto JS
             
+            const datos = await respuesta.json();
 
             if (respuesta.ok) {
-                const datos = await respuesta.json();
+                
                 localStorage.setItem('mi_token_jwt', datos.token);
 
                 window.location.href = "/dashboard"
